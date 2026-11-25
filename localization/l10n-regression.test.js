@@ -10,7 +10,11 @@ const path = require('path');
 const vm = require('vm');
 
 const ROOT_DIR = path.resolve(__dirname, '..');
-const { DEFAULT_CONFIG, loadModulesConfig } = require('../modules-config');
+const crypto = require('crypto');
+const { builtinAsar } = require('../asar-engine');
+const { install } = require('../install');
+const { restore } = require('../restore');
+const { DEFAULT_CONFIG, loadModulesConfig, inspectDiskModules } = require('../modules-config');
 const { createI18nEngine } = require('../i18n/i18n-runtime');
 const { runAudit } = require('./scripts/audit-i18n');
 const { mergeDictionaries, parseUpstreamDictionarySource } = require('./scripts/sync-upstream-dict');
@@ -244,4 +248,47 @@ test('三向词典合并保持 ContextMeter 专用译法优先且幂等', () => 
   assert.equal(merged.exact.Ran, '已运行');
   const engine = createI18nEngine(merged);
   assert.equal(engine.translate('Customizations'), '自定义扩展');
+});
+
+test('Antigravity 2.35.2 宿主安装/卸载闭环兼容与 PR #86 新增词条翻译', async () => {
+  const dict = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'i18n', 'zh-CN.json'), 'utf8'));
+  const engine = createI18nEngine(dict);
+  const troubleshootingRes = engine.translate('See our troubleshooting guide for more help.');
+  assert.ok(troubleshootingRes && /[\u4e00-\u9fff]/.test(troubleshootingRes), 'PR #86 疑难解答链接应完成汉化');
+
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'acm-2352-compat-'));
+  const stateDir = path.join(tmpRoot, 'state');
+  const hostSrcDir = path.join(tmpRoot, 'host-src');
+  const hostAsar = path.join(tmpRoot, 'app.asar');
+  const prevEnv = process.env.AG_METER_STATE_DIR;
+  process.env.AG_METER_STATE_DIR = stateDir;
+
+  try {
+    fs.mkdirSync(path.join(hostSrcDir, 'dist'), { recursive: true });
+    fs.writeFileSync(path.join(hostSrcDir, 'package.json'), JSON.stringify({ name: 'antigravity', version: '2.35.2' }));
+    fs.writeFileSync(
+      path.join(hostSrcDir, 'dist', 'utils.js'),
+      '"use strict";\nfunction setupNodeWrapper(env) {}\nfunction createWindow(url, storageManager) {\n    void loadHubWindowUrl(win, url, { skipBootstrapMint });\n}\n'
+    );
+    fs.writeFileSync(path.join(hostSrcDir, 'dist', 'preload.js'), '"use strict";\nconst electron_1 = require("electron");\n');
+    await builtinAsar.createPackageWithOptions(hostSrcDir, hostAsar, {});
+    const cleanOrigSha = crypto.createHash('sha256').update(fs.readFileSync(hostAsar)).digest('hex');
+
+    await install({ path: hostAsar, noHotInject: true });
+    const diskOn = inspectDiskModules(hostAsar, { forceRefresh: true });
+    assert.equal(diskOn.meterReady, true);
+    assert.equal(diskOn.chineseReady, true);
+    assert.equal(diskOn.chineseStatus, 'ready');
+
+    await restore({ path: hostAsar });
+    const restoredSha = crypto.createHash('sha256').update(fs.readFileSync(hostAsar)).digest('hex');
+    assert.equal(restoredSha, cleanOrigSha);
+    const diskOff = inspectDiskModules(hostAsar, { forceRefresh: true });
+    assert.equal(diskOff.meter, false);
+    assert.equal(diskOff.chinese, false);
+  } finally {
+    if (prevEnv !== undefined) process.env.AG_METER_STATE_DIR = prevEnv;
+    else delete process.env.AG_METER_STATE_DIR;
+    fs.rmSync(tmpRoot, { recursive: true, force: true });
+  }
 });

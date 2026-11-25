@@ -6779,7 +6779,9 @@
     "Read": "已读取",
     "Wrote": "已写入",
     "Writing": "正在写入",
-    "Found": "已找到"
+    "Found": "已找到",
+    "You can prompt the model to try again or start a new conversation if the error persists. See our troubleshooting guide for more help.": "您可以提示模型重试，若错误持续出现，请发起新对话。更多帮助请参阅我们的故障排除指南。",
+    "See our troubleshooting guide for more help.": "更多帮助请参阅我们的故障排除指南。"
   },
   "patterns": [
     {
