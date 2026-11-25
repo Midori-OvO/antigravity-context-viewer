@@ -5,7 +5,7 @@
 Antigravity 界面汉化基于 Antigravity-Chinese-Localization，感谢 aabbWei 与 antigravity-cn-community 贡献者。
 
 - **上游仓库**：<https://github.com/antigravity-cn-community/Antigravity-Chinese-Localization>
-- **采用版本**：Release `v2.34.0`（2026-11-21 发布；以下登记采用组件及 SHA-256 哈希）
+- **采用版本**：基线 Release `v2.34.0`（2026-11-21 发布；以下登记采用组件及 SHA-256 哈希），并已通过三向合并同步至上游 Release `v2.35.1` 词典增量（保留 MIT 许可与版权署名）
 - **采用组件与 SHA-256**：
   - `toolkit/src/dictionary.js`（4,444 条界面词典与 122 条核心词表 `coreWords`，SHA-256：`076829a201ccfd6c59217e6a2ba2fd60ef59350337212d3f1ece8f9ecfa038a0`）
   - `toolkit/src/dom-translator.js`（DOM 物理隔离规则 `shouldSkipNode`、Issue #68 权限审批动态规则、Orchestrator / `Extra High` 修复、Side Question、分屏与 `v2.34.0` 动态正则，SHA-256：`85baa2f5f879d1e602080cfa29bfe1415cbd76183976a0ff8acd7bced86c9f86`）

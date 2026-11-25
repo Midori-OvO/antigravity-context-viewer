@@ -162,10 +162,10 @@ test('meter-enhance: 0~4 档位切换、中文标题等长替换、状态检测�
   }
 });
 
-test('客户端语言与品牌选项默认不暗中启用，支持三态品牌展示与持久化', () => {
+test('客户端语言与品牌选项默认开启简体中文，支持三态品牌展示与持久化', () => {
   const def = JSON.parse(JSON.stringify(modulesCfg.DEFAULT_CONFIG));
-  assert.equal(def.modules.chinese.enabled, false, '默认不得暗中启用客户端汉化');
-  assert.equal(def.modules.chinese.language, 'en');
+  assert.equal(def.modules.chinese.enabled, true, '默认应开启客户端简体中文汉化');
+  assert.equal(def.modules.chinese.language, 'zh-CN');
   assert.equal(def.modules.chinese.brandTitle, 'english');
   assert.equal(modulesCfg.normalizeBrandTitle('hidden'), 'hidden');
   assert.equal(modulesCfg.normalizeBrandTitle('translated'), 'translated');

@@ -1,0 +1,31 @@
+{
+  "description": "统一术语表：约束插件面板、CLI 网页看板、宿主客户端汉化三处译名保持一致",
+  "terms": {
+    "Context": "上下文",
+    "Context Window": "上下文窗口",
+    "Context Budget": "上下文预算",
+    "Quota": "额度",
+    "Remaining Quota": "剩余额度",
+    "Compact": "压缩",
+    "Auto-compact": "自动压缩",
+    "Budget": "预算",
+    "TTFT": "首字延迟",
+    "Output Speed": "输出速度",
+    "Cache Hit Rate": "缓存命中率",
+    "Session": "会话",
+    "Workspace": "工作区",
+    "Settings": "设置",
+    "Language": "语言",
+    "Restart": "重启",
+    "Reset": "重置",
+    "Save": "保存",
+    "Cancel": "取消",
+    "Refresh": "刷新",
+    "Dashboard": "看板",
+    "Model": "模型",
+    "Models": "模型设置",
+    "Accounts & Pools": "账号与共享池",
+    "Diagnostics": "诊断",
+    "Update": "更新"
+  }
+}

@@ -873,9 +873,14 @@
       return true;
     }
     if (cur.getAttribute) {
-      if (cur.getAttribute('data-testid') === 'user-message-content' ||
-          cur.getAttribute('data-testid') === 'code-gutter' ||
-          cur.getAttribute('data-testid') === 'code-gutter-diff' ||
+      var coreDtid = cur.getAttribute('data-testid') || '';
+      if (coreDtid === 'user-message-content' ||
+          coreDtid === 'code-gutter' ||
+          coreDtid === 'code-gutter-diff' ||
+          coreDtid === 'mcp-tool-step' ||
+          coreDtid.indexOf('tool-output') !== -1 ||
+          coreDtid.indexOf('command-output') !== -1 ||
+          coreDtid.indexOf('terminal-output') !== -1 ||
         cur.getAttribute('contenteditable') === 'true' ||
         cur.getAttribute('role') === 'textbox' ||
         cur.getAttribute('data-lexical-editor') === 'true' ||
@@ -937,11 +942,28 @@
     return false;
   }
 
+  var STEP_ACTION_PILL_RE = /^(?:Explored|Exploring|Ran|Run|Running|Viewed|Viewing|Edited|Editing|Thought|Thinking|Working|Done|Analyzed|Analyzing|Searched|Searching|Created|Creating|Updated|Updating|Deleted|Deleting|Listed|Listing|Checked|Checking|Read|Reading|Wrote|Writing|Found|Waiting|Rejected|Errored|Completed|Used)(?:\s+(?:command|commands|files?|tools?|artifacts?))?$/i;
+
+  function isSafeStepActionPillNode(cur) {
+    if (!cur || cur.nodeType !== 1) return false;
+    var tag = cur.tagName ? String(cur.tagName).toUpperCase() : '';
+    if (tag === 'P' || tag === 'CODE' || tag === 'PRE' || tag === 'TEXTAREA' || tag === 'INPUT') return false;
+    if (cur.children && cur.children.length > 0) return false;
+    var raw = String(cur.innerText || cur.textContent || '').trim();
+    if (!raw || raw.length > 40 || !STEP_ACTION_PILL_RE.test(raw)) return false;
+    if (cur.getAttribute) {
+      var dtid = cur.getAttribute('data-testid') || '';
+      if (dtid === 'project-header' || cur.getAttribute('data-project-card') === 'true') return false;
+    }
+    return true;
+  }
+
   function isSafeActionBarNode(cur) {
     if (!cur || cur.nodeType !== 1 || !cur.getAttribute) return false;
     var dtid = cur.getAttribute('data-testid');
     if (dtid === 'queued-decorators' || dtid === 'user-message-actions') return true;
     if (dtid === 'thinking-collapsible-trigger' && cur.tagName && String(cur.tagName).toUpperCase() === 'BUTTON') return true;
+    if (isSafeStepActionPillNode(cur)) return true;
     return false;
   }
 
@@ -1011,17 +1033,17 @@
     return inProtected ? 1 : 0;
   }
 
-  function resolveOwnIgnoreState(el, ancestorSafeBar) {
-    if (!el || el.nodeType !== 1) return ancestorSafeBar ? 2 : 0;
+  function resolveOwnIgnoreState(el, ancestorState) {
+    if (!el || el.nodeType !== 1) return ancestorState === 2 ? 2 : (ancestorState === 1 ? 1 : 0);
     if (hasProtectedCoreOwnMarkers(el, false)) return 1;
     if (el.getAttribute && el.getAttribute('data-testid') === 'menu-option-label') {
       var optTxt = (el.innerText || el.textContent || '').trim();
       if (!Object.prototype.hasOwnProperty.call(MENTION_CATEGORIES, optTxt)) return 1;
-      return (ancestorSafeBar || isSafeActionBarNode(el)) ? 2 : 0;
+      return (ancestorState === 2 || isSafeActionBarNode(el)) ? 2 : 0;
     }
-    var safeNow = ancestorSafeBar || isSafeActionBarNode(el);
+    var safeNow = ancestorState === 2 || isSafeActionBarNode(el);
     if (safeNow) return 2;
-    if (hasProtectedNodeOwnMarkers(el)) return 1;
+    if (ancestorState === 1 || hasProtectedNodeOwnMarkers(el)) return 1;
     return 0;
   }
 
@@ -1306,8 +1328,19 @@
     }
     var ignoreState = ancestorState === undefined
       ? inspectIgnoreState(el)
-      : resolveOwnIgnoreState(el, ancestorState === 2);
-    if (ignoreState === 1) return;
+      : resolveOwnIgnoreState(el, ancestorState);
+    if (ignoreState === 1) {
+      if (hasProtectedCoreOwnMarkers(el, false)) return;
+      if (scanId) el._agyScanId = scanId;
+      var softChild = el.firstChild;
+      while (softChild) {
+        if (softChild.nodeType === 1) {
+          translateElement(softChild, scanId, 1, budget);
+        }
+        softChild = softChild.nextSibling;
+      }
+      return;
+    }
     if (scanId) el._agyScanId = scanId;
 
     if (i18nEnabled && el.getAttribute && el.getAttribute('data-testid') === 'plan-command-fyi-alert') {

@@ -17352,7 +17352,8 @@
                 <span class="key-title" data-i18n="session.dual.title">上下文组成与双轨结构</span>
                 <span id="ctx-comp-ratio-pill" class="ctx-ov-meta-pill">—</span>
                 <span id="ctx-comp-basis-pill" class="ctx-trend-basis-badge" data-basis="empty">—</span>
-                <div class="ctx-segmented ctx-subtrack-switcher" role="group" aria-label="Subtrack View">
+                <div class="ctx-segmented ctx-subtrack-switcher" role="group" aria-label="副轨视图切换"
+                  data-i18n-aria="session.dual.subtrackAria">
                   <button id="ctx-subtrack-mode-comp" class="ctx-seg-btn active" type="button" data-subtrack="comp"
                     aria-pressed="true" data-i18n="session.dual.subModeComp">已用构成 100%</button>
                   <button id="ctx-subtrack-mode-cache" class="ctx-seg-btn" type="button" data-subtrack="cache"
@@ -17538,13 +17539,13 @@
               <div class="ctx-trend-header">
                 <div class="ctx-trend-controls">
                   <span id="ctx-trend-trunc-note" class="ctx-trend-trunc-note" hidden></span>
-                  <div class="ctx-segmented" role="group" aria-label="Trend Mode">
+                  <div class="ctx-segmented" role="group" aria-label="趋势图统计模式" data-i18n-aria="session.trend.modeAria">
                     <button id="ctx-trend-mode-total" class="ctx-seg-btn active" type="button" data-trend-mode="total"
                       aria-pressed="true" data-i18n="session.trend.modeTotal">总量</button>
                     <button id="ctx-trend-mode-delta" class="ctx-seg-btn" type="button" data-trend-mode="delta"
                       aria-pressed="false" data-i18n="session.trend.modeDelta">增量 Δ</button>
                   </div>
-                  <div class="ctx-segmented" role="group" aria-label="Trend Granularity">
+                  <div class="ctx-segmented" role="group" aria-label="趋势图统计粒度" data-i18n-aria="session.trend.granAria">
                     <button id="ctx-trend-gran-step" class="ctx-seg-btn active" type="button" data-trend-gran="step"
                       aria-pressed="true" data-i18n="session.trend.granStep">按步</button>
                     <button id="ctx-trend-gran-turn" class="ctx-seg-btn" type="button" data-trend-gran="turn"
@@ -17583,7 +17584,8 @@
                     data-i18n="session.latestCall.agentMain">主代理</span>
                 </div>
                 <div class="latest-call-actions">
-                  <div class="ctx-segmented ctx-compare-seg" role="group" aria-label="Compare Baseline">
+                  <div class="ctx-segmented ctx-compare-seg" role="group" aria-label="对比基准切换"
+                    data-i18n-aria="session.stepCard.compareAria">
                     <button id="btn-ctx-cmp-step" class="ctx-seg-btn active" type="button" data-cmp-base="prev_step"
                       aria-pressed="true" data-i18n="session.stepCard.compareStep">比前一步</button>
                     <button id="btn-ctx-cmp-turn" class="ctx-seg-btn" type="button" data-cmp-base="prev_turn"
@@ -17634,7 +17636,7 @@
               <span id="ctx-tree-coverage-badge" class="ctx-trend-basis-badge" data-basis="local_estimate">—</span>
             </div>
             <div class="ctx-widget-hdr-actions">
-              <div class="ctx-segmented" role="group" aria-label="Inspector View">
+              <div class="ctx-segmented" role="group" aria-label="解剖台视图切换" data-i18n-aria="session.inspector.viewAria">
                 <button id="btn-inspector-view-tree" class="ctx-seg-btn active" type="button" data-inspector-view="tree"
                   aria-pressed="true" data-i18n="session.inspector.viewTree">分类树</button>
                 <button id="btn-inspector-view-slices" class="ctx-seg-btn" type="button" data-inspector-view="slices"
@@ -17651,14 +17653,14 @@
               <input id="inp-inspector-search" class="tl-filter-input" type="text" placeholder="搜索分类、原文片段或工具…"
                 data-i18n-placeholder="session.inspector.searchPh">
               <div id="ctx-tree-mode-controls" class="ctx-tree-mode-controls">
-                <div class="ctx-segmented" role="group" aria-label="Composition Mode">
+                <div class="ctx-segmented" role="group" aria-label="构成展示模式" data-i18n-aria="session.tree.modeAria">
                   <button id="ctx-tree-mode-full" class="ctx-seg-btn active" type="button" data-tree-mode="full"
                     aria-pressed="true" data-i18n="session.tree.modeFull">全量</button>
                   <button id="ctx-tree-mode-delta" class="ctx-seg-btn" type="button" data-tree-mode="delta"
                     aria-pressed="false" data-i18n="session.tree.modeDelta">Δ 变化</button>
                 </div>
               </div>
-              <div class="ctx-segmented" role="group" aria-label="Inspector Sort">
+              <div class="ctx-segmented" role="group" aria-label="解剖台排序方式" data-i18n-aria="session.inspector.sortAria">
                 <button id="btn-inspector-sort-size" class="ctx-seg-btn active" type="button" data-inspector-sort="size"
                   data-i18n="session.inspector.sortSize">按大小</button>
                 <button id="btn-inspector-sort-order" class="ctx-seg-btn" type="button" data-inspector-sort="order"
@@ -21023,23 +21025,23 @@
     <div id="token-five-line-card" class="token-five-line-card" role="dialog" aria-label="Token usage & cache breakdown"
       data-i18n-aria="composer.cardAria" hidden>
       <div class="tfl-row tfl-hdr">
-        <span class="tfl-label" data-i18n="composer.card.tokenUsage">Token Usage</span>
+        <span class="tfl-label" data-i18n="composer.card.tokenUsage">Token 用量</span>
         <span id="tfl-val-total" class="tfl-val tfl-bold">—</span>
       </div>
       <div class="tfl-row">
-        <span class="tfl-label" data-i18n="composer.card.cacheHit">Cache Hit</span>
+        <span class="tfl-label" data-i18n="composer.card.cacheHit">缓存命中</span>
         <span id="tfl-val-hit" class="tfl-val">—</span>
       </div>
       <div class="tfl-row">
-        <span class="tfl-label" data-i18n="composer.card.uncachedInput">Uncached Input</span>
+        <span class="tfl-label" data-i18n="composer.card.uncachedInput">未缓存输入</span>
         <span id="tfl-val-uncached" class="tfl-val">—</span>
       </div>
       <div class="tfl-row">
-        <span class="tfl-label" data-i18n="composer.card.cacheRead">Cache Read</span>
+        <span class="tfl-label" data-i18n="composer.card.cacheRead">缓存读取</span>
         <span id="tfl-val-cached" class="tfl-val">—</span>
       </div>
       <div class="tfl-row">
-        <span class="tfl-label" data-i18n="composer.card.output">Output</span>
+        <span class="tfl-label" data-i18n="composer.card.output">输出</span>
         <span id="tfl-val-output" class="tfl-val">—</span>
       </div>
       <div class="tfl-sep"></div>
@@ -21417,7 +21419,7 @@ function resolveHostClientLanguageSignal() {
 }
 
 function resolveInitialPanelLanguage() {
-  return resolveExplicitPanelLanguagePref() || resolveHostClientLanguageSignal() || 'zh-CN';
+  return resolveExplicitPanelLanguagePref() || 'zh-CN';
 }
 
 let currentPanelLanguage = resolveInitialPanelLanguage();
@@ -22533,7 +22535,7 @@ const PANEL_I18N = {
   'tip.detail.compactedNoBudget': { 'zh-CN': '压缩后预估 ≈ {used} token（发新消息后切换精确值）', 'zh-TW': '壓縮後預估 ≈ {used} token（發新訊息後切換精確值）', en: 'Post-compact est. ≈ {used} tokens (exact on next message)' },
   'badge.noSession': { 'zh-CN': '未打开会话', 'zh-TW': '未打開對話', en: 'No active chat' },
   'badge.clickOpenCli': { 'zh-CN': ' · 点击查看或启动 CLI', 'zh-TW': ' · 點擊檢視或啟動 CLI', en: ' · Click to view or launch CLI' },
-  'badge.contexts': { 'zh-CN': 'contexts', 'zh-TW': 'contexts', en: 'contexts' },
+  'badge.contexts': { 'zh-CN': '个上下文', 'zh-TW': '個上下文', en: 'contexts' },
   'badge.delayed': { 'zh-CN': '统计延迟', 'zh-TW': '統計延遲', en: 'Delayed' },
   'badge.actualUnknown': { 'zh-CN': '真实量未知', 'zh-TW': '真實量未知', en: 'Actual unknown' },
   'badge.tokensTitle': { 'zh-CN': 'Token 用量一览（点击展开详情）', 'zh-TW': 'Token 用量總覽（點擊展開詳細資訊）', en: 'Token Usage Overview (click to open)' },
@@ -22752,7 +22754,7 @@ const PANEL_I18N = {
   'plan.price.tableSnapshot': { 'zh-CN': '价表快照 {date}', 'zh-TW': '價表快照 {date}', en: 'Pricing snapshot {date}' },
   'plan.specs.windowMul': { 'zh-CN': '额度 {val}', 'zh-TW': '額度 {val}', en: 'Quota {val}' },
   'plan.specs.storage': { 'zh-CN': '存储 {val}', 'zh-TW': '空間 {val}', en: 'Storage {val}' },
-  'plan.specs.cloudCredits': { 'zh-CN': 'Cloud Credits {val}', 'zh-TW': 'Cloud Credits {val}', en: 'Cloud Credits {val}' },
+  'plan.specs.cloudCredits': { 'zh-CN': '云端额度 {val}', 'zh-TW': '雲端額度 {val}', en: 'Cloud Credits {val}' },
   'plan.ultraRangePrice': { 'zh-CN': '$99.99–$199.99/月', 'zh-TW': '$99.99–$199.99/月', en: '$99.99–$199.99/mo' },
   'plan.priceUnsetNote': { 'zh-CN': '待选择 Ultra 具体档位 · 不套用 Pro $19.99', 'zh-TW': '待選擇 Ultra 具體檔位 · 不套用 Pro $19.99', en: 'Select Ultra tier · Pro $19.99 ref not applied' },
   'plan.ultraSubtierUnknown': { 'zh-CN': 'Google AI Ultra', 'zh-TW': 'Google AI Ultra', en: 'Google AI Ultra' },
@@ -23993,7 +23995,14 @@ const PANEL_I18N = {
   'ns.clearCache.title': { 'zh-CN': '清理本地统计缓存', 'zh-TW': '清理本機統計快取', en: 'Clear Local Stats Cache' },
   'ns.clearCache.btn': { 'zh-CN': '清理缓存', 'zh-TW': '清理快取', en: 'Clear Cache' },
   'ns.clearCache.desc': { 'zh-CN': '当前占用 {kb} KB · 清理不影响原有配置项', 'zh-TW': '目前佔用 {kb} KB · 清理不影響原有設定項', en: 'Using {kb} KB · preserves your settings' },
-  'ns.clearCache.done': { 'zh-CN': '已清理 {count} 项本地临时缓存，原有配置已保留', 'zh-TW': '已清理 {count} 項本機暫存快取，原有設定已保留', en: 'Cleared {count} cache entries; settings preserved' }
+  'ns.clearCache.done': { 'zh-CN': '已清理 {count} 项本地临时缓存，原有配置已保留', 'zh-TW': '已清理 {count} 項本機暫存快取，原有設定已保留', en: 'Cleared {count} cache entries; settings preserved' },
+  'session.dual.subtrackAria': { 'zh-CN': '副轨视图切换', 'zh-TW': '副軌檢視切換', en: 'Subtrack View' },
+  'session.trend.modeAria': { 'zh-CN': '趋势图统计模式', 'zh-TW': '趨勢圖統計模式', en: 'Trend Mode' },
+  'session.trend.granAria': { 'zh-CN': '趋势图统计粒度', 'zh-TW': '趨勢圖統計粒度', en: 'Trend Granularity' },
+  'session.stepCard.compareAria': { 'zh-CN': '对比基准切换', 'zh-TW': '對比基準切換', en: 'Compare Baseline' },
+  'session.inspector.viewAria': { 'zh-CN': '解剖台视图切换', 'zh-TW': '解剖台檢視切換', en: 'Inspector View' },
+  'session.tree.modeAria': { 'zh-CN': '构成展示模式', 'zh-TW': '構成展示模式', en: 'Composition Mode' },
+  'session.inspector.sortAria': { 'zh-CN': '解剖台排序方式', 'zh-TW': '解剖台排序方式', en: 'Inspector Sort' }
 };
 
 function t(key, vars = null) {
@@ -71152,7 +71161,7 @@ if (typeof dismissNextPromptSuggestion === 'function') dismissNextPromptSuggesti
   }
 
   globalThis.__AGContextMeter = {
-    buildId: '6fa9255b969466ee',
+    buildId: '22ae021d4ceab344',
     version: METER_RENDERER_VERSION,
     ensureAlive: () => {
       if (state.disposed) return false;

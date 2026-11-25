@@ -78,7 +78,7 @@ function renderDashboardHtml(initialData = {}) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antigravity CLI Dashboard · ${dv}</title>
+  <title>Antigravity CLI 看板 · ${dv}</title>
   <style>
     :root {
       --bg: #0b0f19;

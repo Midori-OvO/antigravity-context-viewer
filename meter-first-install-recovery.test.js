@@ -279,8 +279,8 @@ test('需求三-1: 首次全新安装 4 项可选增强默认全关，缺失字�
 
   const firstCfg = loadModulesConfig({ stateDir: stateDir1, localAppData: legacyDirNoConfig });
   assert.equal(firstCfg.modules.meter.enabled, true, '核心上下文监控应默认开启');
-  assert.equal(firstCfg.modules.chinese.enabled, false, '首次全新安装汉化必须默认关闭');
-  assert.equal(firstCfg.modules.chinese.language, 'en');
+  assert.equal(firstCfg.modules.chinese.enabled, true, '首次全新安装默认开启简体中文汉化');
+  assert.equal(firstCfg.modules.chinese.language, 'zh-CN');
   assert.equal(firstCfg.modules.proxy.enabled, false, '首次全新安装免 TUN 代理必须默认关闭');
   assert.equal(firstCfg.modules.enhance.promptTier, 0, '首次安装提示词优化必须为官方 0 档');
   assert.equal(firstCfg.modules.enhance.chineseTitle, false, '首次安装中文标题补丁必须默认关闭');
@@ -334,15 +334,15 @@ test('需求三-1: 首次全新安装 4 项可选增强默认全关，缺失字�
   assert.equal(legacyEnabledCfg.modules.chinese.enabled, true);
   assert.equal(legacyEnabledCfg.modules.chinese.language, 'zh-CN');
 
-  // 旧独立工具的配置不能代表用户在新插件里选择开启模块。
+  // 旧独立工具的配置不能代表用户在新插件里选择开启模块，保持统一默认配置。
   fs.writeFileSync(path.join(legacyDirNoConfig, 'AntigravityChinese', 'config.json'), JSON.stringify({ enabled: true }), 'utf8');
   const newInstallWithLegacy = loadModulesConfig({ stateDir: path.join(root, 'fresh-unified-state'), localAppData: legacyDirNoConfig });
-  assert.equal(newInstallWithLegacy.modules.chinese.enabled, false);
-  assert.equal(newInstallWithLegacy.modules.chinese.language, 'en');
+  assert.equal(newInstallWithLegacy.modules.chinese.enabled, true);
+  assert.equal(newInstallWithLegacy.modules.chinese.language, 'zh-CN');
 
   // 传隔离 stateDir 不传 localAppData 时绝不穿透读取宿主机真实旧痕迹
   const isoCfg = loadModulesConfig({ stateDir: path.join(root, 'pure-iso-state') });
-  assert.equal(isoCfg.modules.chinese.enabled, false);
+  assert.equal(isoCfg.modules.chinese.enabled, true);
   assert.equal(isoCfg.modules.proxy.enabled, false);
 });
 
@@ -354,16 +354,16 @@ test('需求三-2: template 推荐增强复选框默认全部未勾选，面板�
     assert.equal(/\bchecked\b/i.test(tagMatch[0]), false, `首次安装可选增强复选框 #${id} 不得带默认 checked 属性`);
   }
 
-  // 场景 A: 英文宿主 + 首装全关 + 用户从未手动选择面板语言 -> 首帧与 restoreSettings 后均保持英文
+  // 场景 A: 英文宿主 + 用户从未手动选择面板语言 -> 首帧与 restoreSettings 后均默认简体中文
   const hEn = createRendererLangHarness({
     chineseConfig: { enabled: false, language: 'en' },
     docLang: 'en',
     settingsRes: { ok: true, panelLanguage: 'zh-CN', panelLanguageExplicit: false, uiPreferences: {} }
   });
-  assert.equal(hEn.api.getPanelLanguage(), 'en', '英文宿主冷启动首帧必须跟随为 English');
+  assert.equal(hEn.api.getPanelLanguage(), 'zh-CN', '英文宿主冷启动首帧仍默认保持简体中文');
   await hEn.api.restoreSettingsForTest();
   await hEn.flush();
-  assert.equal(hEn.api.getPanelLanguage(), 'en', '未显式保存 panelLanguage 时不得被后端默认兼容值拉回 zh-CN');
+  assert.equal(hEn.api.getPanelLanguage(), 'zh-CN', '未显式保存 panelLanguage 时默认保持简体中文');
   hEn.api.dispose();
 
   // 场景 B: 用户开启汉化并重启客户端 -> 宿主变为中文，面板自动跟随为简体中文
@@ -378,14 +378,14 @@ test('需求三-2: template 推荐增强复选框默认全部未勾选，面板�
   assert.equal(hZh.api.getPanelLanguage(), 'zh-CN');
   hZh.api.dispose();
 
-  // 场景 C: 关闭汉化重启回英文 -> 面板跟随恢复英文
+  // 场景 C: 关闭汉化重启回英文 -> 未显式切换面板语言时仍保持默认简体中文
   const hBackEn = createRendererLangHarness({
     chineseConfig: { enabled: false, language: 'en' },
     docLang: 'en'
   });
   await hBackEn.api.restoreSettingsForTest();
   await hBackEn.flush();
-  assert.equal(hBackEn.api.getPanelLanguage(), 'en');
+  assert.equal(hBackEn.api.getPanelLanguage(), 'zh-CN');
   hBackEn.api.dispose();
 
   // 场景 D: 用户在英文宿主手动切换为 zh-TW 并持久化 -> 重启即使宿主仍为英文，始终优先用户个人设定
@@ -395,7 +395,7 @@ test('需求三-2: template 推荐增强复选框默认全部未勾选，面板�
     docLang: 'en',
     onSaveSettings: (p) => savedPayloads.push(p)
   });
-  assert.equal(hUser.api.getPanelLanguage(), 'en');
+  assert.equal(hUser.api.getPanelLanguage(), 'zh-CN');
   await hUser.api.setPanelLanguage('zh-TW', { persist: true });
   await hUser.flush();
   assert.equal(hUser.api.getPanelLanguage(), 'zh-TW');

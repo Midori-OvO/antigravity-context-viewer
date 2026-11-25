@@ -1,0 +1,110 @@
+name: Upstream Sync & Audit
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: "上游插件仓库分支或 Tag (留空默认 upstream/main)"
+        required: false
+        default: ""
+      dict_tag:
+        description: "上游客户端词典 Tag (留空默认最新 Release)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-and-audit:
+    name: Sync Upstream & Audit Localization
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Fork
+        uses: actions/checkout@v4
+        with:
+          ref: zh-cn
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Configure Git & Fetch Upstream
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote remove upstream 2>/dev/null || true
+          git remote add upstream https://github.com/elviscjn-cjn/antigravity-context-viewer.git
+          git fetch upstream --tags
+
+      - name: Check Upstream Versions
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node localization/scripts/sync-upstream.js | tee sync-check.log
+          TARGET_REF="${{ inputs.upstream_ref }}"
+          if [ -z "$TARGET_REF" ]; then
+            TARGET_REF="upstream/main"
+          fi
+          echo "target_ref=$TARGET_REF" >> "$GITHUB_OUTPUT"
+
+      - name: Merge Upstream & Sync Dictionary on Sync Branch
+        id: merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          SYNC_BRANCH="sync/upstream-auto"
+          git checkout -B "$SYNC_BRANCH"
+          set +e
+          git merge --no-edit "${{ steps.check.outputs.target_ref }}"
+          MERGE_EXIT=$?
+          set -e
+          echo "merge_conflict=$([ $MERGE_EXIT -ne 0 ] && echo 'true' || echo 'false')" >> "$GITHUB_OUTPUT"
+
+          if [ $MERGE_EXIT -eq 0 ]; then
+            if [ -n "${{ inputs.dict_tag }}" ]; then
+              node localization/scripts/sync-upstream-dict.js --tag "${{ inputs.dict_tag }}" --update-config
+            else
+              node localization/scripts/sync-upstream-dict.js --update-config
+            fi
+            npm run build:renderer
+            set +e
+            node localization/scripts/audit-i18n.js --strict --report localization/audit-report.md
+            AUDIT_EXIT=$?
+            npm test
+            TEST_EXIT=$?
+            node --test localization/l10n-regression.test.js
+            L10N_TEST_EXIT=$?
+            set -e
+            echo "audit_exit=$AUDIT_EXIT" >> "$GITHUB_OUTPUT"
+            echo "test_exit=$TEST_EXIT" >> "$GITHUB_OUTPUT"
+            echo "l10n_test_exit=$L10N_TEST_EXIT" >> "$GITHUB_OUTPUT"
+          else
+            echo "audit_exit=1" >> "$GITHUB_OUTPUT"
+            echo "test_exit=1" >> "$GITHUB_OUTPUT"
+            echo "l10n_test_exit=1" >> "$GITHUB_OUTPUT"
+            git merge --abort || true
+          fi
+          rm -f sync-check.log
+
+      - name: Commit Changes & Open Pull Request
+        if: steps.merge.outputs.merge_conflict == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "chore(l10n): sync upstream and update localization audit"
+            git push -f origin "sync/upstream-auto"
+            BODY=$(printf "### 上游自动同步与汉化审计\n\n- 审计门禁退出码: \`%s\`\n- 上游单测退出码: \`%s\`\n- 汉化专项回归退出码: \`%s\`\n\n请查看 \`localization/audit-report.md\` 确认是否有新增待补翻文案。\n" "${{ steps.merge.outputs.audit_exit }}" "${{ steps.merge.outputs.test_exit }}" "${{ steps.merge.outputs.l10n_test_exit }}")
+            gh pr create --base zh-cn --head "sync/upstream-auto" --title "chore(l10n): 上游版本同步与汉化审计" --body "$BODY" || gh pr edit "sync/upstream-auto" --body "$BODY"
+          else
+            echo "No changes to commit."
+          fi

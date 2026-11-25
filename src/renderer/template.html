@@ -506,7 +506,8 @@
                 <span class="key-title" data-i18n="session.dual.title">上下文组成与双轨结构</span>
                 <span id="ctx-comp-ratio-pill" class="ctx-ov-meta-pill">—</span>
                 <span id="ctx-comp-basis-pill" class="ctx-trend-basis-badge" data-basis="empty">—</span>
-                <div class="ctx-segmented ctx-subtrack-switcher" role="group" aria-label="Subtrack View">
+                <div class="ctx-segmented ctx-subtrack-switcher" role="group" aria-label="副轨视图切换"
+                  data-i18n-aria="session.dual.subtrackAria">
                   <button id="ctx-subtrack-mode-comp" class="ctx-seg-btn active" type="button" data-subtrack="comp"
                     aria-pressed="true" data-i18n="session.dual.subModeComp">已用构成 100%</button>
                   <button id="ctx-subtrack-mode-cache" class="ctx-seg-btn" type="button" data-subtrack="cache"
@@ -692,13 +693,13 @@
               <div class="ctx-trend-header">
                 <div class="ctx-trend-controls">
                   <span id="ctx-trend-trunc-note" class="ctx-trend-trunc-note" hidden></span>
-                  <div class="ctx-segmented" role="group" aria-label="Trend Mode">
+                  <div class="ctx-segmented" role="group" aria-label="趋势图统计模式" data-i18n-aria="session.trend.modeAria">
                     <button id="ctx-trend-mode-total" class="ctx-seg-btn active" type="button" data-trend-mode="total"
                       aria-pressed="true" data-i18n="session.trend.modeTotal">总量</button>
                     <button id="ctx-trend-mode-delta" class="ctx-seg-btn" type="button" data-trend-mode="delta"
                       aria-pressed="false" data-i18n="session.trend.modeDelta">增量 Δ</button>
                   </div>
-                  <div class="ctx-segmented" role="group" aria-label="Trend Granularity">
+                  <div class="ctx-segmented" role="group" aria-label="趋势图统计粒度" data-i18n-aria="session.trend.granAria">
                     <button id="ctx-trend-gran-step" class="ctx-seg-btn active" type="button" data-trend-gran="step"
                       aria-pressed="true" data-i18n="session.trend.granStep">按步</button>
                     <button id="ctx-trend-gran-turn" class="ctx-seg-btn" type="button" data-trend-gran="turn"
@@ -737,7 +738,8 @@
                     data-i18n="session.latestCall.agentMain">主代理</span>
                 </div>
                 <div class="latest-call-actions">
-                  <div class="ctx-segmented ctx-compare-seg" role="group" aria-label="Compare Baseline">
+                  <div class="ctx-segmented ctx-compare-seg" role="group" aria-label="对比基准切换"
+                    data-i18n-aria="session.stepCard.compareAria">
                     <button id="btn-ctx-cmp-step" class="ctx-seg-btn active" type="button" data-cmp-base="prev_step"
                       aria-pressed="true" data-i18n="session.stepCard.compareStep">比前一步</button>
                     <button id="btn-ctx-cmp-turn" class="ctx-seg-btn" type="button" data-cmp-base="prev_turn"
@@ -788,7 +790,7 @@
               <span id="ctx-tree-coverage-badge" class="ctx-trend-basis-badge" data-basis="local_estimate">—</span>
             </div>
             <div class="ctx-widget-hdr-actions">
-              <div class="ctx-segmented" role="group" aria-label="Inspector View">
+              <div class="ctx-segmented" role="group" aria-label="解剖台视图切换" data-i18n-aria="session.inspector.viewAria">
                 <button id="btn-inspector-view-tree" class="ctx-seg-btn active" type="button" data-inspector-view="tree"
                   aria-pressed="true" data-i18n="session.inspector.viewTree">分类树</button>
                 <button id="btn-inspector-view-slices" class="ctx-seg-btn" type="button" data-inspector-view="slices"
@@ -805,14 +807,14 @@
               <input id="inp-inspector-search" class="tl-filter-input" type="text" placeholder="搜索分类、原文片段或工具…"
                 data-i18n-placeholder="session.inspector.searchPh">
               <div id="ctx-tree-mode-controls" class="ctx-tree-mode-controls">
-                <div class="ctx-segmented" role="group" aria-label="Composition Mode">
+                <div class="ctx-segmented" role="group" aria-label="构成展示模式" data-i18n-aria="session.tree.modeAria">
                   <button id="ctx-tree-mode-full" class="ctx-seg-btn active" type="button" data-tree-mode="full"
                     aria-pressed="true" data-i18n="session.tree.modeFull">全量</button>
                   <button id="ctx-tree-mode-delta" class="ctx-seg-btn" type="button" data-tree-mode="delta"
                     aria-pressed="false" data-i18n="session.tree.modeDelta">Δ 变化</button>
                 </div>
               </div>
-              <div class="ctx-segmented" role="group" aria-label="Inspector Sort">
+              <div class="ctx-segmented" role="group" aria-label="解剖台排序方式" data-i18n-aria="session.inspector.sortAria">
                 <button id="btn-inspector-sort-size" class="ctx-seg-btn active" type="button" data-inspector-sort="size"
                   data-i18n="session.inspector.sortSize">按大小</button>
                 <button id="btn-inspector-sort-order" class="ctx-seg-btn" type="button" data-inspector-sort="order"
@@ -4177,23 +4179,23 @@
     <div id="token-five-line-card" class="token-five-line-card" role="dialog" aria-label="Token usage & cache breakdown"
       data-i18n-aria="composer.cardAria" hidden>
       <div class="tfl-row tfl-hdr">
-        <span class="tfl-label" data-i18n="composer.card.tokenUsage">Token Usage</span>
+        <span class="tfl-label" data-i18n="composer.card.tokenUsage">Token 用量</span>
         <span id="tfl-val-total" class="tfl-val tfl-bold">—</span>
       </div>
       <div class="tfl-row">
-        <span class="tfl-label" data-i18n="composer.card.cacheHit">Cache Hit</span>
+        <span class="tfl-label" data-i18n="composer.card.cacheHit">缓存命中</span>
         <span id="tfl-val-hit" class="tfl-val">—</span>
       </div>
       <div class="tfl-row">
-        <span class="tfl-label" data-i18n="composer.card.uncachedInput">Uncached Input</span>
+        <span class="tfl-label" data-i18n="composer.card.uncachedInput">未缓存输入</span>
         <span id="tfl-val-uncached" class="tfl-val">—</span>
       </div>
       <div class="tfl-row">
-        <span class="tfl-label" data-i18n="composer.card.cacheRead">Cache Read</span>
+        <span class="tfl-label" data-i18n="composer.card.cacheRead">缓存读取</span>
         <span id="tfl-val-cached" class="tfl-val">—</span>
       </div>
       <div class="tfl-row">
-        <span class="tfl-label" data-i18n="composer.card.output">Output</span>
+        <span class="tfl-label" data-i18n="composer.card.output">输出</span>
         <span id="tfl-val-output" class="tfl-val">—</span>
       </div>
       <div class="tfl-sep"></div>

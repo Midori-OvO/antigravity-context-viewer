@@ -86,7 +86,7 @@ test('安装安全性 1.1：宿主升级后重新安装，以新版宿主为打�
     const { inspectDiskModules, loadModulesConfig } = require('./modules-config');
     const firstDisk = inspectDiskModules(targetAsar);
     assert.equal(firstDisk.meter, true);
-    assert.equal(firstDisk.chinese, false);
+    assert.equal(firstDisk.chinese, true);
     assert.equal(firstDisk.proxy, false);
     const fresh = loadModulesConfig().modules;
     assert.equal(fresh.enhance.promptTier, 0);

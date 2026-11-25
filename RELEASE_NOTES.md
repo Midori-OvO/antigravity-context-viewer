@@ -18,7 +18,7 @@
 
 感谢 [@Evander-8](https://github.com/Evander-8). [@zhao33079-zhao](https://github.com/zhao33079-zhao). [@IpiggyI](https://github.com/IpiggyI) 和 [@jzPPP3333](https://github.com/jzPPP3333). 贡献来源和采纳范围见 [Contributors](https://github.com/elviscjn-cjn/antigravity-context-viewer/blob/v0.9.3/CONTRIBUTORS.md).
 
-Antigravity 界面汉化基于 Antigravity-Chinese-Localization. 感谢 aabbWei 与 antigravity-cn-community 贡献者.
+Antigravity 界面汉化基于 Antigravity-Chinese-Localization，感谢 aabbWei 与 antigravity-cn-community 贡献者。
 
 ## English
 

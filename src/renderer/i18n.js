@@ -66,7 +66,7 @@ function resolveHostClientLanguageSignal() {
 }
 
 function resolveInitialPanelLanguage() {
-  return resolveExplicitPanelLanguagePref() || resolveHostClientLanguageSignal() || 'zh-CN';
+  return resolveExplicitPanelLanguagePref() || 'zh-CN';
 }
 
 let currentPanelLanguage = resolveInitialPanelLanguage();
@@ -1182,7 +1182,7 @@ const PANEL_I18N = {
   'tip.detail.compactedNoBudget': { 'zh-CN': '压缩后预估 ≈ {used} token（发新消息后切换精确值）', 'zh-TW': '壓縮後預估 ≈ {used} token（發新訊息後切換精確值）', en: 'Post-compact est. ≈ {used} tokens (exact on next message)' },
   'badge.noSession': { 'zh-CN': '未打开会话', 'zh-TW': '未打開對話', en: 'No active chat' },
   'badge.clickOpenCli': { 'zh-CN': ' · 点击查看或启动 CLI', 'zh-TW': ' · 點擊檢視或啟動 CLI', en: ' · Click to view or launch CLI' },
-  'badge.contexts': { 'zh-CN': 'contexts', 'zh-TW': 'contexts', en: 'contexts' },
+  'badge.contexts': { 'zh-CN': '个上下文', 'zh-TW': '個上下文', en: 'contexts' },
   'badge.delayed': { 'zh-CN': '统计延迟', 'zh-TW': '統計延遲', en: 'Delayed' },
   'badge.actualUnknown': { 'zh-CN': '真实量未知', 'zh-TW': '真實量未知', en: 'Actual unknown' },
   'badge.tokensTitle': { 'zh-CN': 'Token 用量一览（点击展开详情）', 'zh-TW': 'Token 用量總覽（點擊展開詳細資訊）', en: 'Token Usage Overview (click to open)' },
@@ -1401,7 +1401,7 @@ const PANEL_I18N = {
   'plan.price.tableSnapshot': { 'zh-CN': '价表快照 {date}', 'zh-TW': '價表快照 {date}', en: 'Pricing snapshot {date}' },
   'plan.specs.windowMul': { 'zh-CN': '额度 {val}', 'zh-TW': '額度 {val}', en: 'Quota {val}' },
   'plan.specs.storage': { 'zh-CN': '存储 {val}', 'zh-TW': '空間 {val}', en: 'Storage {val}' },
-  'plan.specs.cloudCredits': { 'zh-CN': 'Cloud Credits {val}', 'zh-TW': 'Cloud Credits {val}', en: 'Cloud Credits {val}' },
+  'plan.specs.cloudCredits': { 'zh-CN': '云端额度 {val}', 'zh-TW': '雲端額度 {val}', en: 'Cloud Credits {val}' },
   'plan.ultraRangePrice': { 'zh-CN': '$99.99–$199.99/月', 'zh-TW': '$99.99–$199.99/月', en: '$99.99–$199.99/mo' },
   'plan.priceUnsetNote': { 'zh-CN': '待选择 Ultra 具体档位 · 不套用 Pro $19.99', 'zh-TW': '待選擇 Ultra 具體檔位 · 不套用 Pro $19.99', en: 'Select Ultra tier · Pro $19.99 ref not applied' },
   'plan.ultraSubtierUnknown': { 'zh-CN': 'Google AI Ultra', 'zh-TW': 'Google AI Ultra', en: 'Google AI Ultra' },
@@ -2642,7 +2642,14 @@ const PANEL_I18N = {
   'ns.clearCache.title': { 'zh-CN': '清理本地统计缓存', 'zh-TW': '清理本機統計快取', en: 'Clear Local Stats Cache' },
   'ns.clearCache.btn': { 'zh-CN': '清理缓存', 'zh-TW': '清理快取', en: 'Clear Cache' },
   'ns.clearCache.desc': { 'zh-CN': '当前占用 {kb} KB · 清理不影响原有配置项', 'zh-TW': '目前佔用 {kb} KB · 清理不影響原有設定項', en: 'Using {kb} KB · preserves your settings' },
-  'ns.clearCache.done': { 'zh-CN': '已清理 {count} 项本地临时缓存，原有配置已保留', 'zh-TW': '已清理 {count} 項本機暫存快取，原有設定已保留', en: 'Cleared {count} cache entries; settings preserved' }
+  'ns.clearCache.done': { 'zh-CN': '已清理 {count} 项本地临时缓存，原有配置已保留', 'zh-TW': '已清理 {count} 項本機暫存快取，原有設定已保留', en: 'Cleared {count} cache entries; settings preserved' },
+  'session.dual.subtrackAria': { 'zh-CN': '副轨视图切换', 'zh-TW': '副軌檢視切換', en: 'Subtrack View' },
+  'session.trend.modeAria': { 'zh-CN': '趋势图统计模式', 'zh-TW': '趨勢圖統計模式', en: 'Trend Mode' },
+  'session.trend.granAria': { 'zh-CN': '趋势图统计粒度', 'zh-TW': '趨勢圖統計粒度', en: 'Trend Granularity' },
+  'session.stepCard.compareAria': { 'zh-CN': '对比基准切换', 'zh-TW': '對比基準切換', en: 'Compare Baseline' },
+  'session.inspector.viewAria': { 'zh-CN': '解剖台视图切换', 'zh-TW': '解剖台檢視切換', en: 'Inspector View' },
+  'session.tree.modeAria': { 'zh-CN': '构成展示模式', 'zh-TW': '構成展示模式', en: 'Composition Mode' },
+  'session.inspector.sortAria': { 'zh-CN': '解剖台排序方式', 'zh-TW': '解剖台排序方式', en: 'Inspector Sort' }
 };
 
 function t(key, vars = null) {

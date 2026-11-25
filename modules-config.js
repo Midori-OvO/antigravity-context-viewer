@@ -71,8 +71,8 @@ const DEFAULT_CONFIG = {
       enabled: true
     },
     chinese: {
-      enabled: false,
-      language: 'en', // 'zh-CN' | 'en'（zh-TW 因上游词典缺少开源授权暂不内置）
+      enabled: true,
+      language: 'zh-CN', // 'zh-CN' | 'en'（zh-TW 因上游词典缺少开源授权暂不内置）
       brandTitle: 'english', // 'english' | 'hidden' | 'translated'
       desktopOnly: true,
       lastUpdated: null
@@ -252,6 +252,15 @@ function validateModulesSchema(parsed) {
 }
 
 function attachConfigCorruptionMeta(target, cfgPath, errorMsg) {
+  if (target && target.modules) {
+    if (target.modules.chinese) {
+      target.modules.chinese.enabled = false;
+      target.modules.chinese.language = 'en';
+    }
+    if (target.modules.proxy) {
+      target.modules.proxy.enabled = false;
+    }
+  }
   Object.defineProperties(target, {
     __configCorrupted: { value: true, enumerable: false, configurable: true },
     __configError: { value: errorMsg, enumerable: false, configurable: true },
