@@ -2089,9 +2089,25 @@ async function main() {
   };
 
   if (cmd === 'install') {
-    const meterVersion = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version;
-    console.log(`🚀 [Antigravity 对话上下文查看器 v${meterVersion}] 正在安装上下文可视化组件...`);
+    const pkgMeta = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
+    const meterVersion = pkgMeta.version;
+    const displayVer = pkgMeta.displayVersion || meterVersion;
+    console.log(`🚀 [Antigravity 对话上下文查看器 v${displayVer}] 正在安装上下文可视化组件...`);
     const diskOnly = args.includes('--disk-only') || process.env.AG_EMIT_INSTALL_META === '1';
+    const { loadModulesConfig: loadMods, saveModulesConfig: saveMods } = require('./modules-config');
+    const preCfg = loadMods({});
+    let installModulesOpt;
+    if (
+      !preCfg.__configCorrupted &&
+      preCfg.modules?.chinese &&
+      preCfg.modules.chinese.enabled === false &&
+      preCfg.modules.chinese.lastUpdated === null
+    ) {
+      preCfg.modules.chinese.enabled = true;
+      preCfg.modules.chinese.language = 'zh-CN';
+      saveMods(preCfg, {});
+      installModulesOpt = { chinese: { enabled: true, language: 'zh-CN' } };
+    }
     const liveBefore = diskOnly ? {} : await queryLiveWindow(cdpOptions);
     const bridgePrep = diskOnly ? {} : await ensureLiveBridgeIfNeeded(liveBefore, cdpOptions);
     const hotInjectOptions = {
@@ -2110,7 +2126,8 @@ async function main() {
         force: isForce,
         allowIntegrityOverride: isForceMacAsar,
         hotInjectOptions,
-        noHotInject: diskOnly
+        noHotInject: diskOnly,
+        ...(installModulesOpt ? { modules: installModulesOpt } : {})
       });
     } catch (installErr) {
       await rollbackPreparedLiveBridge(bridgePrep);

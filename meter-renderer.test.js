@@ -4777,20 +4777,22 @@ test('Issue #22: applyAppUpdate 在严格模式下不因未声明 currentVer 报
 
     h.elements.get('btn-check-update').click();
     await h.flush();
-    assert.equal(h.elements.get('up-pop-ver').textContent, `v0.8.3 → ${curVer}`);
+    const dispVer = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).displayVersion || curVer;
+    const escapedDisp = dispVer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    assert.equal(h.elements.get('up-pop-ver').textContent, `v0.8.3 → ${dispVer}`);
 
     h.elements.get('btn-apply-update').click();
     await h.flush();
 
     assert.equal(h.elements.get('v').textContent, '');
-    assert.match(h.elements.get('up-pop-ver').textContent, new RegExp(escapedVer));
+    assert.match(h.elements.get('up-pop-ver').textContent, new RegExp(escapedDisp));
     assert.doesNotMatch(h.elements.get('up-pop-status').textContent, /currentVer|异常|失败/i);
     assert.match(h.elements.get('up-pop-status').textContent, new RegExp(escapedVer));
 
     mockLiveInjected = true;
     h.elements.get('btn-apply-update').click();
     await h.flush();
-    assert.equal(h.elements.get('v').textContent, curVer);
+    assert.equal(h.elements.get('v').textContent, dispVer);
   } finally {
     api.dispose();
   }
@@ -5453,13 +5455,14 @@ test('v0.8.8 chart visual redesign E2E: single 1.82M vs heavy 100..3.64B, cross-
 test('当前权威版本展示与预发布更新比较隔离', async () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
   const curVer = pkg.version;
-  const escapedVer = curVer.replace(/\./g, '\\.');
-  assert.equal(pkg.displayVersion, curVer);
+  const dispVer = pkg.displayVersion || curVer;
+  const escapedDisp = dispVer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  assert.match(dispVer, new RegExp(`^${curVer.replace(/\./g, '\\.')}(?:-zh\\.\\d+)?$`));
 
-  // 1. 默认构建模板中 #v 与 #up-pop-ver 均为权威版本，且 beta 通道开关默认未勾选
+  // 1. 默认构建模板中 #v 与 #up-pop-ver 均为权威展示版本，且 beta 通道开关默认未勾选
   const builtCode = fs.readFileSync(path.join(__dirname, 'meter-renderer.js'), 'utf8');
-  assert.match(builtCode, new RegExp(`<span id="v"[^>]*>${escapedVer}<\\/span>`));
-  assert.match(builtCode, new RegExp(`<span id="up-pop-ver"[^>]*>${escapedVer}<\\/span>`));
+  assert.match(builtCode, new RegExp(`<span id="v"[^>]*>${escapedDisp}<\\/span>`));
+  assert.match(builtCode, new RegExp(`<span id="up-pop-ver"[^>]*>${escapedDisp}<\\/span>`));
   assert.equal(builtCode.includes('id="check-allow-beta-updates"'), true);
 
   // 2. 当前版本 vs 当前版本 判为已是最新
@@ -5478,8 +5481,8 @@ test('当前权威版本展示与预发布更新比较隔离', async () => {
     try {
       await api.checkUpdate(true);
       await h.flush();
-      assert.equal(h.elements.get('up-pop-ver').textContent, `${curVer} (已是最新)`);
-      assert.match(h.elements.get('up-pop-body').textContent, new RegExp(escapedVer));
+      assert.equal(h.elements.get('up-pop-ver').textContent, `${dispVer} (已是最新)`);
+      assert.match(h.elements.get('up-pop-body').textContent, new RegExp(escapedDisp));
     } finally {
       api.dispose();
     }
@@ -5511,8 +5514,8 @@ test('当前权威版本展示与预发布更新比较隔离', async () => {
     try {
       await api.checkUpdate(true);
       await h.flush();
-      assert.equal(h.elements.get('up-pop-ver').textContent, `${curVer} → ${curVer} beta2`);
-      assert.match(h.elements.get('up-pop-body').textContent, new RegExp(`v${escapedVer}`));
+      assert.equal(h.elements.get('up-pop-ver').textContent, `${dispVer} → ${curVer} beta2`);
+      assert.match(h.elements.get('up-pop-body').textContent, new RegExp(`v${curVer.replace(/\./g, '\\.')}`));
       assert.equal(h.elements.get('btn-apply-update').style.display, 'inline-block');
     } finally {
       api.dispose();

@@ -292,3 +292,67 @@ test('Antigravity 2.35.2 宿主安装/卸载闭环兼容与 PR #86 新增词条�
     fs.rmSync(tmpRoot, { recursive: true, force: true });
   }
 });
+
+test('cli.js install 对未显式配置过的旧版上游 modules.json 自动启用汉化，显式关闭则保留关闭', async () => {
+  const { execFileSync } = require('child_process');
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'acm-cli-install-zh-'));
+  const stateDir = path.join(tmpRoot, 'state');
+  const hostSrcDir = path.join(tmpRoot, 'host-src');
+  const hostAsar = path.join(tmpRoot, 'app.asar');
+  try {
+    fs.mkdirSync(stateDir, { recursive: true });
+    fs.mkdirSync(path.join(hostSrcDir, 'dist'), { recursive: true });
+    fs.writeFileSync(path.join(hostSrcDir, 'package.json'), JSON.stringify({ name: 'antigravity', version: '2.35.2' }));
+    fs.writeFileSync(
+      path.join(hostSrcDir, 'dist', 'utils.js'),
+      '"use strict";\nfunction setupNodeWrapper(env) {}\nfunction createWindow(url, storageManager) {\n    void loadHubWindowUrl(win, url, { skipBootstrapMint });\n}\n'
+    );
+    fs.writeFileSync(path.join(hostSrcDir, 'dist', 'preload.js'), '"use strict";\nconst electron_1 = require("electron");\n');
+    await builtinAsar.createPackageWithOptions(hostSrcDir, hostAsar, {});
+
+    // Case 1: Untouched upstream default (enabled: false, lastUpdated: null) -> auto-enabled
+    fs.writeFileSync(
+      path.join(stateDir, 'modules.json'),
+      JSON.stringify({
+        schemaVersion: '0.8.8',
+        modules: {
+          meter: { enabled: true },
+          chinese: { enabled: false, language: 'en', brandTitle: 'english', desktopOnly: true, lastUpdated: null }
+        }
+      }),
+      'utf8'
+    );
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'cli.js'), 'install', '--path', hostAsar, '--state-dir', stateDir, '--disk-only'], {
+      cwd: ROOT_DIR,
+      env: { ...process.env, AG_METER_TEST_MODE: '1', AG_METER_STATE_DIR: stateDir },
+      encoding: 'utf8'
+    });
+    const cfgAfter = loadModulesConfig({ stateDir });
+    assert.equal(cfgAfter.modules.chinese.enabled, true);
+    assert.equal(cfgAfter.modules.chinese.language, 'zh-CN');
+    const diskOn = inspectDiskModules(hostAsar, { forceRefresh: true });
+    assert.equal(diskOn.chineseReady, true);
+
+    // Case 2: Explicitly disabled (lastUpdated != null) -> stays disabled
+    fs.writeFileSync(
+      path.join(stateDir, 'modules.json'),
+      JSON.stringify({
+        schemaVersion: '0.8.8',
+        modules: {
+          meter: { enabled: true },
+          chinese: { enabled: false, language: 'en', brandTitle: 'english', desktopOnly: true, lastUpdated: '2026-11-25T00:00:00.000Z' }
+        }
+      }),
+      'utf8'
+    );
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'cli.js'), 'install', '--path', hostAsar, '--state-dir', stateDir, '--disk-only'], {
+      cwd: ROOT_DIR,
+      env: { ...process.env, AG_METER_TEST_MODE: '1', AG_METER_STATE_DIR: stateDir },
+      encoding: 'utf8'
+    });
+    const cfgExplicitOff = loadModulesConfig({ stateDir });
+    assert.equal(cfgExplicitOff.modules.chinese.enabled, false);
+  } finally {
+    fs.rmSync(tmpRoot, { recursive: true, force: true });
+  }
+});
