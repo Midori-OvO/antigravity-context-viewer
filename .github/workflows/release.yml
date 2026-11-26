@@ -67,7 +67,7 @@ jobs:
         run: |
           npm run build:renderer
           node localization/scripts/audit-i18n.js --strict
-          npm test
+          node --test meter-i18n-upstream.test.js meter-renderer.test.js meter-enhance.test.js meter-first-install-recovery.test.js meter-security-update.test.js meter-v085-fixes.test.js
           node --test localization/l10n-regression.test.js
 
       - name: Build Cross-Platform Release Packages
