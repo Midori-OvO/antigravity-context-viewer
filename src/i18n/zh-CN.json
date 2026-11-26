@@ -6781,7 +6781,10 @@
     "Writing": "正在写入",
     "Found": "已找到",
     "You can prompt the model to try again or start a new conversation if the error persists. See our troubleshooting guide for more help.": "您可以提示模型重试，若错误持续出现，请发起新对话。更多帮助请参阅我们的故障排除指南。",
-    "See our troubleshooting guide for more help.": "更多帮助请参阅我们的故障排除指南。"
+    "See our troubleshooting guide for more help.": "更多帮助请参阅我们的故障排除指南。",
+    "Applies to /btw and messages sent after this turn": "适用于 /btw 及本回合之后发送的消息",
+    "Applies to messages sent after this turn": "适用于本回合之后发送的消息",
+    "Model cannot be changed while the agent is running": "智能体运行期间无法切换模型"
   },
   "patterns": [
     {
