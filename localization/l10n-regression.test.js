@@ -250,13 +250,15 @@ test('三向词典合并保持 ContextMeter 专用译法优先且幂等', () => 
   assert.equal(engine.translate('Customizations'), '自定义扩展');
 });
 
-test('Antigravity 2.35.2 宿主安装/卸载闭环兼容与 PR #86 新增词条翻译', async () => {
+test('Antigravity 2.36.0 宿主安装/卸载闭环兼容与 PR #86 / Ticket-62 新增词条翻译', async () => {
   const dict = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'i18n', 'zh-CN.json'), 'utf8'));
   const engine = createI18nEngine(dict);
   const troubleshootingRes = engine.translate('See our troubleshooting guide for more help.');
   assert.ok(troubleshootingRes && /[\u4e00-\u9fff]/.test(troubleshootingRes), 'PR #86 疑难解答链接应完成汉化');
+  assert.equal(engine.translate('Runs on this machine'), '在本机运行');
+  assert.equal(engine.translate('No matching hosts'), '没有匹配的主机');
 
-  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'acm-2352-compat-'));
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'acm-2360-compat-'));
   const stateDir = path.join(tmpRoot, 'state');
   const hostSrcDir = path.join(tmpRoot, 'host-src');
   const hostAsar = path.join(tmpRoot, 'app.asar');
@@ -265,7 +267,7 @@ test('Antigravity 2.35.2 宿主安装/卸载闭环兼容与 PR #86 新增词条�
 
   try {
     fs.mkdirSync(path.join(hostSrcDir, 'dist'), { recursive: true });
-    fs.writeFileSync(path.join(hostSrcDir, 'package.json'), JSON.stringify({ name: 'antigravity', version: '2.35.2' }));
+    fs.writeFileSync(path.join(hostSrcDir, 'package.json'), JSON.stringify({ name: 'antigravity', version: '2.36.0' }));
     fs.writeFileSync(
       path.join(hostSrcDir, 'dist', 'utils.js'),
       '"use strict";\nfunction setupNodeWrapper(env) {}\nfunction createWindow(url, storageManager) {\n    void loadHubWindowUrl(win, url, { skipBootstrapMint });\n}\n'
