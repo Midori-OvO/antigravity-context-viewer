@@ -3,7 +3,7 @@
   "upstreamPluginVersion": "0.9.3",
   "testedHostVersion": "2.36.0",
   "upstreamDictRepo": "antigravity-cn-community/Antigravity-Chinese-Localization",
-  "upstreamDictVersion": "v2.35.2",
+  "upstreamDictVersion": "v2.36.0",
   "upstreamDictCommit": "a395dc1",
   "forkRepo": "Midori-OvO/antigravity-context-viewer",
   "updateSource": "upstream",
